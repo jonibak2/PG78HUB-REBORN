@@ -1,0 +1,170 @@
+body {
+  font-family: sans-serif;
+  background: url('assets/pgHUB/bg.jpg') no-repeat center center fixed;
+  background-size: cover;
+  color: white;
+  margin: 0;
+  padding: 2rem;
+  text-align: center;
+  height: 100vh;
+  overflow-x: hidden;
+}
+
+h1 {
+  margin-bottom: 2rem;
+  text-shadow: 0 0 10px black;
+}
+
+.links {
+  display: grid;
+  gap: 1rem;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.link-card {
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 12px;
+  padding: 1rem;
+  text-decoration: none;
+  color: white;
+  transition: transform 0.2s;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+.link-card:hover {
+  transform: scale(1.03);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.link-card span {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.split-container {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+  justify-content: center;
+}
+
+.split-container .link-card {
+  flex: 1;
+  margin: 0;
+}
+
+.single-card-container {
+  display: flex;
+  justify-content: center;
+}
+
+.single-card-container .link-card {
+  flex: none;
+  width: 50%;
+}
+
+footer {
+  margin-top: 3rem;
+  font-size: 0.9rem;
+  color: #ccc;
+  text-shadow: 0 0 5px black;
+}
+
+.moon-phase {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  transition: transform 0.2s;
+  display: inline-block;
+}
+
+.moon-phase:hover {
+  transform: scale(1.1);
+}
+
+.header-top {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1;
+}
+
+.github-link {
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  text-decoration: none;
+  font-size: 1rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  transition: transform 0.2s;
+}
+
+.github-link:hover {
+  transform: scale(1.03);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.alpha-test {
+  font-size: 0.8rem;
+  color: #bbb;
+  text-shadow: 0 0 5px black;
+  margin-top: 0.5rem;
+}
+
+.video-button {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+.video-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: black;
+  z-index: 2000;
+}
+
+.video-overlay video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Новый стиль для надписи */
+.ps-dragoman {
+  position: fixed;
+  bottom: 1rem;
+  left: 1rem;
+  font-size: 0.9rem;
+  color: #ccc;
+  text-shadow: 0 0 5px black;
+  z-index: 1000;
+}
+
+.ps-dragoman a {
+  color: #ccc;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.ps-dragoman a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
