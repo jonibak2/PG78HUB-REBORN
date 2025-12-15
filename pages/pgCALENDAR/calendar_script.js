@@ -4,11 +4,11 @@ const birthdays = [
   { name: "Хома", date: "2009-03-23", avatar: "assets/pgCALENDAR/homa.png" },
   { name: "Моди", date: "2007-04-29", avatar: "assets/pgCALENDAR/modie.png" },
   { name: "Пашок", date: "2005-05-07", avatar: "assets/pgCALENDAR/pasha.png" },
-  { name: "Энд", date: "2007-05-28", avatar: "assets/pgCALENDAR/fayko.png" },
+  { name: "Энд", date: "2007-05-28", avatar: "assets/pgCALENDAR/fayko.jpg" },
   { name: "Аня", date: "2005-07-04", avatar: "assets/pgCALENDAR/anya.png" },
   { name: "Стасик", date: "2007-07-22", avatar: "assets/pgCALENDAR/nicech.png" },
   { name: "Ника", date: "2007-08-18", avatar: "assets/pgCALENDAR/nika.png" },
-  { name: "PG78", date: "2022-09-12", avatar: "assets/pgCALENDAR/pg78.png" },
+  { name: "PG78", date: "2022-09-12", avatar: "assets/pgCALENDAR/pg78.jpg" },
   { name: "Костя", date: "2006-09-26", avatar: "assets/pgCALENDAR/kostya.png" },
   { name: "Ержан", date: "2006-10-19", avatar: "assets/pgCALENDAR/erzhan.png" },
   { name: "Драгоман", date: "2008-10-26", avatar: "assets/pgCALENDAR/dragoman.png" },
@@ -230,3 +230,4 @@ document.addEventListener('DOMContentLoaded', () => {
   renderAllCalendars(currentYear);
   renderUpcoming();
 });
+
