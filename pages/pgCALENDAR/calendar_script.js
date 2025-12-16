@@ -4,11 +4,11 @@ const birthdays = [
   { name: "Хома", date: "2009-03-23", avatar: "assets/pgCALENDAR/homa.png" },
   { name: "Моди", date: "2007-04-29", avatar: "assets/pgCALENDAR/modie.png" },
   { name: "Пашок", date: "2005-05-07", avatar: "assets/pgCALENDAR/pasha.png" },
-  { name: "Энд", date: "2007-05-28", avatar: "assets/pgCALENDAR/fayko.jpg" },
+  { name: "Энд", date: "2007-05-28", avatar: "assets/pgCALENDAR/fayko.png" },
   { name: "Аня", date: "2005-07-04", avatar: "assets/pgCALENDAR/anya.png" },
   { name: "Стасик", date: "2007-07-22", avatar: "assets/pgCALENDAR/nicech.png" },
   { name: "Ника", date: "2007-08-18", avatar: "assets/pgCALENDAR/nika.png" },
-  { name: "PG78", date: "2022-09-12", avatar: "assets/pgCALENDAR/pg78.jpg" },
+  { name: "PG78", date: "2022-09-12", avatar: "assets/pgCALENDAR/pg78.png" },
   { name: "Костя", date: "2006-09-26", avatar: "assets/pgCALENDAR/kostya.png" },
   { name: "Ержан", date: "2006-10-19", avatar: "assets/pgCALENDAR/erzhan.png" },
   { name: "Драгоман", date: "2008-10-26", avatar: "assets/pgCALENDAR/dragoman.png" },
@@ -190,7 +190,7 @@ function showBirthdayPopup(birthdays, selectedDate) {
       }
       return `
         <div style="display: flex; align-items: center; gap: 1rem; margin: 1rem 0; padding: 1rem; background: rgba(255, 107, 107, 0.1); border-radius: 8px;">
-          <img src="${birthday.avatar}" alt="${birthday.name}" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;">
+          <img src="${birthday.avatar}" alt="${birthday.name}" class="profile-avatar" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; cursor: pointer;">
           <div>
             <strong>${birthday.name}</strong><br>
             ${phrase}<br>
@@ -203,6 +203,43 @@ function showBirthdayPopup(birthdays, selectedDate) {
 
   popup.classList.add('show');
   overlay.classList.add('show');
+
+  // Add hover event listeners to avatars
+  const avatars = content.querySelectorAll('.profile-avatar');
+  avatars.forEach(avatar => {
+    avatar.addEventListener('mouseenter', showAvatarZoom);
+    avatar.addEventListener('mouseleave', hideAvatarZoom);
+  });
+}
+
+function showAvatarZoom(event) {
+  const avatar = event.target;
+  const avatarSrc = avatar.src;
+  const avatarName = avatar.alt;
+  const rect = avatar.getBoundingClientRect();
+
+  let zoomContainer = document.getElementById('avatar-zoom-container');
+  if (!zoomContainer) {
+    zoomContainer = document.createElement('div');
+    zoomContainer.id = 'avatar-zoom-container';
+    document.body.appendChild(zoomContainer);
+  }
+
+  zoomContainer.innerHTML = `
+    <img src="${avatarSrc}" alt="${avatarName}" class="avatar-zoom-image">
+  `;
+  zoomContainer.classList.add('show');
+
+  // Position near cursor but within viewport
+  zoomContainer.style.left = (rect.left + rect.width / 2) + 'px';
+  zoomContainer.style.top = (rect.top - 20) + 'px';
+}
+
+function hideAvatarZoom() {
+  const zoomContainer = document.getElementById('avatar-zoom-container');
+  if (zoomContainer) {
+    zoomContainer.classList.remove('show');
+  }
 }
 
 function closePopup() {
@@ -230,4 +267,3 @@ document.addEventListener('DOMContentLoaded', () => {
   renderAllCalendars(currentYear);
   renderUpcoming();
 });
-
