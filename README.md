@@ -8,7 +8,8 @@ This site is a collection of sites for my friends. Mostly annual awards C:
 ## Changelog / Roadmap
 #### Calendar
 - Popup avatars on hover ✔️
-- Animations and loading screen ❌
+- Animations and loading screen ✔️
+- Sidebar navigation ✔️
 #### PGA25
 - WIP 🤫
 
