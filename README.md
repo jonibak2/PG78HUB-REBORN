@@ -12,6 +12,7 @@ This site is a collection of sites for my friends. Mostly annual awards C:
 - Popup avatars on hover ✔️
 - Animations and loading screen ✔️
 - Sidebar navigation ✔️
+- Phone adaptation ✔️
 #### PGA25
 - WIP 🤫
 
