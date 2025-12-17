@@ -1,3 +1,5 @@
+let animationsEnabled = false;
+
 function getMoonPhase(date) {
   const year = date.getFullYear();
   const month = date.getMonth() + 1;
@@ -20,26 +22,54 @@ function getMoonPhase(date) {
   else return "🌑";
 }
 
-const moonPhaseElement = document.getElementById('moonPhase');
-const today = new Date();
-if (moonPhaseElement) moonPhaseElement.textContent = getMoonPhase(today);
+// Инициализация с прелоадером
+document.addEventListener('DOMContentLoaded', () => {
+  const moonPhaseElement = document.getElementById('moonPhase');
+  const today = new Date();
+  if (moonPhaseElement) moonPhaseElement.textContent = getMoonPhase(today);
 
-const audio = new Audio('assets/pgHUB/bansuka.mp3');
-let canPlay = true;
+  const loader = document.getElementById('hub-loader');
+  const content = document.getElementById('page-content');
 
-if (moonPhaseElement) {
-  moonPhaseElement.addEventListener('click', () => {
-    if (canPlay) {
-      audio.currentTime = 0;
-      audio.play();
-      canPlay = false;
-
-      setTimeout(() => {
-        canPlay = true;
-      }, 7500);
-    }
+  // Применяем анимации к карточкам с задержкой
+  const linkCards = document.querySelectorAll('.link-card');
+  linkCards.forEach((card, index) => {
+    card.style.animationDelay = `${500 + index * 100}ms`;
   });
-}
+
+  setTimeout(() => {
+    animationsEnabled = true;
+
+    if (loader) {
+      loader.style.display = 'none';
+    }
+    if (content) {
+      content.style.display = 'block';
+      // Добавляем класс для запуска анимаций
+      requestAnimationFrame(() => {
+        content.classList.add('show');
+      });
+    }
+  }, 3300);
+
+  // Обработчик клика по фазе луны
+  const audio = new Audio('assets/pgHUB/bansuka.mp3');
+  let canPlay = true;
+
+  if (moonPhaseElement) {
+    moonPhaseElement.addEventListener('click', () => {
+      if (canPlay) {
+        audio.currentTime = 0;
+        audio.play();
+        canPlay = false;
+
+        setTimeout(() => {
+          canPlay = true;
+        }, 7500);
+      }
+    });
+  }
+});
 
 const videoButton = document.getElementById('videoButton');
 const videoOverlay = document.getElementById('videoOverlay');
