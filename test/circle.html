@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Хост Мафии</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --accent: #ff6b6b;
+        --accent-gradient: linear-gradient(135deg, #ff6b6b 0%, #fd588a 100%);
+        --card-bg: #ffffff;
+        --bg: linear-gradient(135deg, #f5f5f5 0%, #e8f0f0 100%);
+        --role-mirny: #e6f0ff;
+        --role-mafia: #ffe6e6;
+        --role-don: #fff0e6;
+        --role-komissar: #fffbe6;
+        --role-doctor: #e6ffe6;
+        --role-putana: #f9e6ff;
+      }
+
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      html, body { height: 100%; font-family: system-ui, -apple-system, sans-serif; background: var(--bg); overflow: hidden; }
+      body { display: flex; flex-direction: column; padding: 1.5rem; gap: 1.5rem; }
+
+      .main-container { display: flex; gap: 2rem; flex: 1; min-height: 0; position: relative; }
+
+      /* ПАНЕЛИ */
+      .left-panel { flex: 1; display: flex; flex-direction: column; gap: 1rem; min-width: 0; }
+      .control-panel { background: var(--card-bg); border-radius: 12px; padding: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
+      .button-group { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.8rem; }
+      
+      button { background: var(--accent-gradient); color: white; border: none; padding: 1rem; border-radius: 8px; cursor: pointer; font-weight: 600; box-shadow: 0 4px 12px rgba(255,107,107,0.3); transition: all 0.3s; }
+      .players-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 1rem; padding: 1rem; background: var(--card-bg); border-radius: 12px; }
+
+      .player { display: flex; align-items: center; padding: 1.2rem 1.5rem; gap: 1rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); transition: all 0.3s ease; }
+      .player[data-role="Мирный"] { background: var(--role-mirny); }
+      .player[data-role="Мафия"] { background: var(--role-mafia); }
+      .player[data-role="Дон"] { background: var(--role-don); }
+      .player[data-role="Комиссар"] { background: var(--role-komissar); }
+      .player[data-role="Доктор"] { background: var(--role-doctor); }
+      .player[data-role="Путана"] { background: var(--role-putana); }
+      
+      .player.dead { opacity: 0.5; filter: grayscale(100%); background: #e0e0e0 !important; }
+      .player-number { font-weight: bold; font-size: 1.4rem; width: 2.8rem; height: 2.8rem; background: var(--accent-gradient); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; cursor: pointer; }
+
+      input[type="text"] { flex: 1; padding: 0.9rem; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1.1rem; }
+      .vote-checks { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-left: auto; }
+      .vote-check { width: 24px; height: 24px; accent-color: var(--accent); cursor: pointer; }
+
+      .right-panel { width: 380px; display: flex; flex-direction: column; gap: 1.5rem; }
+      .cheatsheet { background: var(--card-bg); border-radius: 12px; padding: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.08); flex: 1; }
+
+      /* ДВА КОЛЬЦА СЕЛЕКТОРА */
+      .player-selector-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); display: none; z-index: 4999; }
+      .player-selector-popup { position: fixed; display: none; z-index: 5000; top: 50%; left: 0; width: 100%; transform: translateY(-50%); pointer-events: none; }
+      .player-selector-overlay.active, .player-selector-popup.active { display: block; }
+
+      .selector-wrapper { display: flex; justify-content: space-between; padding: 0 100px; width: 100%; box-sizing: border-box; }
+      .circle-container { position: relative; width: 400px; height: 400px; pointer-events: auto; }
+      
+      .center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100px; height: 100px; border-radius: 50%; background: #222; box-shadow: 0 6px 20px rgba(0,0,0,0.8); z-index: 20; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; }
+
+      /* Позиционирование элементов БЕЗ анимации из центра */
+      .member {
+        position: absolute;
+        width: 70px; height: 70px;
+        border-radius: 50%;
+        background: #333;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+        display: flex; align-items: center; justify-content: center;
+        overflow: hidden; cursor: pointer;
+        z-index: 10;
+        transition: transform 0.2s ease; /* Только для ховера */
+        top: 50%; left: 50%; margin: -35px;
+      }
+      .member:hover { transform: scale(1.2) !important; z-index: 30; }
+      .member img { width: 100%; height: 100%; object-fit: cover; }
+      .member span { color: white; font-weight: bold; font-size: 1.4rem; }
+
+      /* Фиксированные координаты (сразу на местах) */
+      .member:nth-child(2) { transform: translate(0, -170px); }
+      .member:nth-child(3) { transform: translate(75px, -150px); }
+      .member:nth-child(4) { transform: translate(135px, -100px); }
+      .member:nth-child(5) { transform: translate(165px, -25px); }
+      .member:nth-child(6) { transform: translate(165px, 55px); }
+      .member:nth-child(7) { transform: translate(135px, 130px); }
+      .member:nth-child(8) { transform: translate(75px, 175px); }
+      .member:nth-child(9) { transform: translate(0, 190px); }
+      .member:nth-child(10) { transform: translate(-75px, 175px); }
+      .member:nth-child(11) { transform: translate(-135px, 130px); }
+      .member:nth-child(12) { transform: translate(-165px, 55px); }
+      .member:nth-child(13) { transform: translate(-165px, -25px); }
+      .member:nth-child(14) { transform: translate(-135px, -100px); }
+      .member:nth-child(15) { transform: translate(-75px, -150px); }
+
+      /* ТАЙМЕР МОДАЛ */
+      #timer-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; z-index: 10000; align-items: center; justify-content: center; flex-direction: column; }
+      #timer-modal.active { display: flex; }
+      .timer-controls { margin-top: 20px; }
+    </style>
+  </head>
+  <body>
+
+    <div class="main-container">
+      <div class="left-panel">
+        <div class="control-panel">
+          <div class="button-group">
+            <button onclick="addPlayer()">Добавить игрока</button>
+            <button onclick="setPlayerCount(10)">10 игроков</button>
+            <button onclick="resetVotes()">Сбросить голоса</button>
+            <button id="open-timer-btn" onclick="openTimerModal()">⏱ Таймер</button>
+          </div>
+        </div>
+        <div id="players" class="players-list"></div>
+      </div>
+
+      <div class="right-panel">
+        <div class="cheatsheet">
+          <h2 style="text-align:center; color:var(--accent);">📋 Шпаргалка</h2>
+          <ul style="margin: 20px; line-height: 1.6;">
+            <li><strong>6 игроков:</strong> 1 маф, 1 дон, 1 ком, 1 док, 2 мир</li>
+            <li><strong>10 игроков:</strong> 2 маф, 1 дон, 1 ком, 1 док, 1 пут, 4 мир</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div id="timer-modal">
+      <div class="timer-container"></div>
+      <select id="time-select" style="padding:10px; margin-top:10px;">
+        <option value="60">1 минута</option>
+        <option value="120">2 минуты</option>
+      </select>
+      <div class="timer-controls">
+        <button id="play-pause">Старт</button>
+        <button id="timer-reset">Сброс</button>
+        <button onclick="closeTimerModal()">Закрыть</button>
+      </div>
+    </div>
+
+    <div class="player-selector-overlay" id="overlay"></div>
+    <div class="player-selector-popup" id="popup">
+      <div class="selector-wrapper">
+        <div class="circle-container" id="circleLeft"><div class="center">ЛЮДИ</div></div>
+        <div class="circle-container" id="circleRight"><div class="center">СЛОТЫ</div></div>
+      </div>
+    </div>
+
+    <script>
+      const playersList = document.getElementById("players");
+      const overlay = document.getElementById("overlay");
+      const popup = document.getElementById("popup");
+      let activeInput = null;
+
+      const people = [
+        { name: "Эристorem", avatar: "assets/pgCALENDAR/eristorem.png" },
+        { name: "Хома", avatar: "assets/pgCALENDAR/homa.png" },
+        { name: "Моди", avatar: "assets/pgCALENDAR/modie.png" },
+        { name: "Пашок", avatar: "assets/pgCALENDAR/pasha.png" },
+        { name: "Энд", avatar: "assets/pgCALENDAR/fayko.jpg" },
+        { name: "Аня", avatar: "assets/pgCALENDAR/anya.png" },
+        { name: "Стасик", avatar: "assets/pgCALENDAR/nicech.png" },
+        { name: "Ника", avatar: "assets/pgCALENDAR/nika.png" },
+        { name: "Костя", avatar: "assets/pgCALENDAR/kostya.png" },
+        { name: "Ержан", avatar: "assets/pgCALENDAR/erzhan.png" },
+        { name: "Драгоман", avatar: "assets/pgCALENDAR/dragoman.png" },
+        { name: "Андрей", avatar: "assets/pgCALENDAR/andrew.png" },
+        { name: "Жанибек", avatar: "assets/pgCALENDAR/jonibak.png" },
+        { name: "Моринок", avatar: "assets/pgCALENDAR/morinok.png" }
+      ];
+
+      function initSelectors() {
+        const cLeft = document.getElementById("circleLeft");
+        const cRight = document.getElementById("circleRight");
+
+        // Левое кольцо
+        people.forEach(p => {
+          const div = document.createElement("div");
+          div.className = "member";
+          div.innerHTML = `<img src="${p.avatar}" alt="${p.name}">`;
+          div.onclick = () => { if(activeInput) activeInput.value = p.name; closeSelector(); };
+          cLeft.appendChild(div);
+        });
+
+        // Правое кольцо
+        for(let i=1; i<=14; i++) {
+          const div = document.createElement("div");
+          div.className = "member";
+          div.innerHTML = `<img src="" alt="${i}" style="display:none"><span>${i}</span>`;
+          div.onclick = () => { if(activeInput) activeInput.value = i; closeSelector(); };
+          cRight.appendChild(div);
+        }
+      }
+
+      function openSelector(input) {
+        activeInput = input;
+        overlay.classList.add("active");
+        popup.classList.add("active");
+      }
+
+      function closeSelector() {
+        overlay.classList.remove("active");
+        popup.classList.remove("active");
+      }
+
+      overlay.onclick = closeSelector;
+
+      function addPlayer(n) {
+        const id = n || playersList.children.length + 1;
+        const div = document.createElement("div");
+        div.className = "player";
+        div.dataset.role = "Мирный";
+        div.innerHTML = `
+          <div class="player-number" onclick="openSelector(this.nextElementSibling)">${id}</div>
+          <input type="text" placeholder="Имя игрока">
+          <select onchange="this.parentElement.dataset.role=this.value">
+            <option value="Мирный">Мирный</option><option value="Мафия">Мафия</option>
+            <option value="Дон">Дон</option><option value="Комиссар">Комиссар</option>
+            <option value="Доктор">Доктор</option><option value="Путана">Путана</option>
+          </select>
+          <select onchange="this.value==='Мёртв'?this.parentElement.classList.add('dead'):this.parentElement.classList.remove('dead')">
+            <option>Жив</option><option>Мёртв</option>
+          </select>
+          <div class="vote-checks">${'<input type="checkbox" class="vote-check">'.repeat(10)}</div>
+        `;
+        playersList.appendChild(div);
+      }
+
+      function setPlayerCount(n) { playersList.innerHTML = ''; for(let i=1; i<=n; i++) addPlayer(i); }
+      function resetVotes() { document.querySelectorAll('.vote-check').forEach(c => c.checked = false); }
+      
+      // Функции таймера (заглушки для твоей логики из index2.html)
+      function openTimerModal() { document.getElementById("timer-modal").classList.add("active"); }
+      function closeTimerModal() { document.getElementById("timer-modal").classList.remove("active"); }
+
+      initSelectors();
+      setPlayerCount(10);
+    </script>
+  </body>
+</html>
