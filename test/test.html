@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Countdown Timer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
+  <style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-family: "Lato", sans-serif;
+}
+
+body {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
+}
+
+#time-select {
+  padding: 10px;
+  font-size: 16px;
+  width: 150px;
+  border: 2px solid #c39fe0;
+  border-radius: 5px;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  font-family: Arial, sans-serif;
+  color: #fff;
+  background-color: #c39fe0;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 5px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+  background-color: #a56cc1;
+  transform: scale(1.05);
+}
+
+button:active {
+  background-color: #8a4f9e;
+  transform: scale(0.95);
+}
+
+#pause {
+  background-color: #ff6347;
+}
+
+#resume {
+  background-color: #32cd32;
+}
+
+#reset {
+  background-color: #1e90ff;
+}
+
+.timer-container {
+  margin-right: 20px;
+}
+
+.countdown__container {
+  position: relative;
+  width: var(--size, 500px);
+  height: var(--size, 500px);
+}
+
+.countdown__circle {
+  transform: rotate(0deg);
+}
+
+.countdown__progress {
+  stroke: var(--color, #c39fe0);
+  stroke-dasharray: var(--circumference);
+  stroke-dashoffset: 0;
+  fill: none;
+  stroke-linecap: round;
+  animation: progress 5s linear forwards;
+  animation-play-state: paused; /* Inicia a animação */
+}
+
+.countdown__background {
+  stroke: var(--background-color, #eee);
+  fill: none;
+}
+
+.countdown__text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: calc(var(--size) / 2 * var(--font-size));
+  color: var(--color, #c39fe0);
+}
+
+.countdown__video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: calc(var(--size) * 0.8);
+  height: calc(var(--size) * 0.8);
+  border-radius: 50%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+  pointer-events: none;
+}
+
+.countdown__video.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+  </style>
+</head>
+<body>
+  <div class="timer-container"></div>
+  <div>
+    <select id="time-select">
+      <option value="30">30 секунд</option>
+      <option value="60" selected>1 минута</option>
+      <option value="120">2 минуты</option>
+      <option value="180">3 минуты</option>
+      <option value="300">5 минут</option>
+    </select>
+  </div>
+  <button id="play-pause">Пауза/Продолжить</button>
+  <button id="reset">Сброс</button>
+
+  <script>
+class CountdownTimer {
+  /**
+   * Creates a new CountdownTimer instance.
+   * @param {string} selector - CSS selector of the element where the timer will be rendered.
+   * @param {object} [options] - Options object to configure the timer.
+   * @param {number} [options.duration=60] - Total duration of the countdown in seconds.
+   * @param {string} [options.color="#c39fe0"] - Color of the progress circle.
+   * @param {number} [options.size=200] - Diameter of the timer in pixels.
+   * @param {string} [options.backgroundColor="#eee"] - Background color of the timer circle.
+   * @param {number} [options.strokeWidth=4] - Stroke width of the progress and background circles in pixels.
+   * @param {number} [options.fontSize=0.2] - Font size of the text relative to the timer size.
+   * @param {function} [options.onComplete=null] - Function to be called when the countdown reaches zero.
+   * @param {function} [options.onTick=null] - Function to be called every second during the countdown. Receives the remaining time in seconds.
+   * @throws {Error} If the provided selector is undefined.
+   * @throws {Error} If the container element is not found using the selector.
+   */
+  constructor(selector, options) {
+    if (!selector) {
+      throw new Error("Selector is undefined");
+    }
+
+    this.defaults = {
+      duration: 60,
+      color: "#c39fe0",
+      size: 200,
+      backgroundColor: "#eee",
+      strokeWidth: 4,
+      fontSize: 0.2,
+      onComplete: null,
+      onTick: null
+    };
+
+    this.settings = Object.assign({}, this.defaults, options);
+    this.container = document.querySelector(selector);
+    this.timeLeft = this.settings.duration;
+    this.interval = null;
+    this.isRunning = false;
+    this.hasStarted = false;
+
+    if (!this.container) {
+      throw new Error("Container element not found");
+    }
+
+    // Initialize the timer
+    this.init();
+  }
+
+  /**
+   * Initializes the timer by creating the structure and setting up styles.
+   */
+  init() {
+    this.createStructure();
+    this.setupStyles();
+    this.updateButtonLabel();
+  }
+
+  /**
+   * Creates the HTML structure of the timer within the container.
+   */
+  createStructure() {
+    const { size, strokeWidth } = this.settings;
+    const r = size / 2 - strokeWidth; // Calculate the circle radius
+    const half = size / 2; // Calculate the center point
+
+    this.container.innerHTML = `
+        <div class="countdown__container">
+          <svg class="countdown__circle" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
+            <circle class="countdown__background" cx="${half}" cy="${half}" r="${r}" stroke-width="${strokeWidth}" />
+            <circle class="countdown__progress" cx="${half}" cy="${half}" r="${r}" stroke-width="${strokeWidth}" transform="rotate(-90 ${half} ${half})" />
+          </svg>
+          <div class="countdown__text">${this.formatTime(this.timeLeft)}</div>
+          <video class="countdown__video" autoplay>
+            <source src="assets/tomoko.mp4" type="video/mp4">
+          </video>
+        </div>
+      `;
+
+    this.progressCircle = this.container.querySelector(".countdown__progress");
+    this.backgroundCircle = this.container.querySelector(
+      ".countdown__background"
+    );
+    this.textElement = this.container.querySelector(".countdown__text");
+    this.videoElement = this.container.querySelector(".countdown__video");
+    if (this.videoElement) {
+      this.videoElement.volume = 0.1;
+    }
+  }
+
+  /**
+   * Sets up the inline CSS styles for the container and timer elements.
+   */
+  setupStyles() {
+    const { size, color, backgroundColor, fontSize } = this.settings;
+    const r = size / 2 - this.settings.strokeWidth;
+    const c = 2 * Math.PI * r; // Calculate the circle circumference
+
+    this.container.style.setProperty("--size", `${size}px`);
+    this.container.style.setProperty("--color", color);
+    this.container.style.setProperty("--background-color", backgroundColor);
+    this.container.style.setProperty("--font-size", fontSize);
+    this.container.style.setProperty("--circumference", c);
+  }
+
+  /**
+   * Formats the time in seconds to MM:SS format.
+   * @param {number} time - Time in seconds.
+   * @returns {string} Formatted time as MM:SS.
+   */
+  formatTime(time) {
+    const minutes = Math.floor(time / 60);
+    const seconds = time % 60;
+    return `${minutes
+      .toString()
+      .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+  }
+
+  /**
+   * Updates the countdown display every second.
+   */
+  updateCountdown() {
+    const r = this.settings.size / 2 - this.settings.strokeWidth;
+    const c = 2 * Math.PI * r;
+
+    // Calculate the progress of the countdown (from 0 to 1)
+    const progress = this.timeLeft / this.settings.duration;
+    // Calculate the 'stroke-dashoffset' value to animate the progress circle
+    const dashoffset = c * (1 - progress);
+
+    this.progressCircle.style.strokeDashoffset = dashoffset;
+    
+    // Всегда показываем текст
+    this.textElement.textContent = this.formatTime(this.timeLeft);
+    
+    // Показать видео при 10 сек и меньше
+    if (this.timeLeft <= 10 && this.timeLeft > 0) {
+      if (this.videoElement) {
+        this.videoElement.classList.add("show");
+        if (this.isRunning && this.videoElement.paused) {
+          this.videoElement.play().catch(err => console.log("Ошибка воспроизведения:", err));
+        }
+      }
+    } else {
+      if (this.videoElement) {
+        this.videoElement.classList.remove("show");
+      }
+    }
+
+    if (this.settings.onTick) {
+      this.settings.onTick(this.timeLeft);
+    }
+
+    if (this.timeLeft > 0) {
+      this.timeLeft--;
+    } else {
+      clearInterval(this.interval);
+
+      if (this.settings.onComplete) {
+        this.settings.onComplete();
+      }
+    }
+  }
+
+  /**
+   * Starts the countdown.
+   */
+  startCountdown() {
+    // Clear any existing interval to prevent multiple countdowns
+    if (this.interval) {
+      clearInterval(this.interval);
+    }
+    this.isRunning = true;
+    this.hasStarted = true;
+    // Add a smooth transition for the circle animation
+    this.progressCircle.style.transition = "stroke-dashoffset 0.95s linear";
+    // Set an interval to update the countdown every second
+    this.interval = setInterval(() => this.updateCountdown(), 1000);
+  }
+
+  /**
+   * Pauses the countdown.
+   */
+  pause() {
+    clearInterval(this.interval);
+    this.isRunning = false;
+    if (this.videoElement && !this.videoElement.paused) {
+      this.videoElement.pause();
+    }
+  }
+
+  /**
+   * Resumes a paused countdown.
+   */
+  resume() {
+    if (this.timeLeft <= 10 && this.timeLeft > 0 && this.videoElement) {
+      this.videoElement.play();
+    }
+    this.startCountdown();
+  }
+
+  /**
+   * Resets the countdown to the initial duration and starts it again.
+   */
+  reset() {
+    this.timeLeft = this.settings.duration;
+    this.isRunning = false;
+    this.hasStarted = false;
+    clearInterval(this.interval);
+    this.interval = null;
+    if (this.videoElement) {
+      this.videoElement.pause();
+      this.videoElement.currentTime = 0;
+    }
+    this.updateCountdown();
+    this.updateButtonLabel();
+  }
+
+  changeTime(time) {
+    this.settings.duration = time;
+    this.timeLeft = time;
+    this.isRunning = false;
+    this.hasStarted = false;
+    clearInterval(this.interval);
+    this.interval = null;
+    if (this.videoElement) {
+      this.videoElement.pause();
+      this.videoElement.currentTime = 0;
+    }
+    this.updateCountdown();
+    this.updateButtonLabel();
+  }
+
+  /**
+   * Updates the button label based on timer state.
+   */
+  updateButtonLabel() {
+    const button = document.getElementById("play-pause");
+    if (button) {
+      if (!this.hasStarted) {
+        button.textContent = "Старт";
+      } else {
+        button.textContent = this.isRunning ? "Пауза" : "Продолжить";
+      }
+    }
+  }
+
+  /**
+   * Stops the countdown and removes the generated HTML structure from the container.
+   */
+  destroy() {
+    clearInterval(this.interval);
+    this.container.innerHTML = "";
+  }
+}
+
+// Example usage
+const timer = new CountdownTimer(".timer-container", {
+  duration: 60,
+  color: "#ff6347",
+  size: 300,
+  backgroundColor: "#f0f0f0",
+  strokeWidth: 12,
+  fontSize: 0.3,
+  onComplete: () => {
+    console.log("Таймер завершен!");
+  },
+  onTick: (timeLeft) => {
+    // console.log("Time left:", timeLeft);
+  }
+});
+
+document.getElementById("time-select").addEventListener("change", () => {
+  const newTime = parseInt(document.getElementById("time-select").value, 10);
+  timer.changeTime(newTime);
+  // Скрыть видео при изменении времени
+  if (timer.videoElement) {
+    timer.videoElement.pause();
+    timer.videoElement.currentTime = 0;
+  }
+});
+
+document.getElementById("play-pause").addEventListener("click", () => {
+  if (timer.isRunning) {
+    timer.pause();
+  } else {
+    timer.resume();
+  }
+  timer.updateButtonLabel();
+});
+document.getElementById("reset").addEventListener("click", () => timer.reset());
+  </script>
+</body>
+</html>
