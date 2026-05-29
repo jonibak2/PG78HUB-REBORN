@@ -234,7 +234,134 @@ function renderAllCalendars(year) {
   }
 }
 
-function showBirthdayPopup(birthdays, selectedDate) {
+// Функции для управления уведомлениями
+const NOTIFICATION_DB = 'birthday_notifications';
+const NOTIFICATION_STORE = 'scheduled_notifications';
+
+function openNotificationDB() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(NOTIFICATION_DB, 1);
+    
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => resolve(request.result);
+    request.onupgradeneeded = (event) => {
+      const db = event.target.result;
+      if (!db.objectStoreNames.contains(NOTIFICATION_STORE)) {
+        const store = db.createObjectStore(NOTIFICATION_STORE, { keyPath: 'id', autoIncrement: true });
+        store.createIndex('personName', 'personName', { unique: false });
+        store.createIndex('scheduledTime', 'scheduledTime', { unique: false });
+      }
+    };
+  });
+}
+
+async function scheduleNotifications(personName, birthDate, avatar) {
+  try {
+    const db = await openNotificationDB();
+    const transaction = db.transaction([NOTIFICATION_STORE], 'readwrite');
+    const store = transaction.objectStore(NOTIFICATION_STORE);
+
+    // Удаляем старые уведомления для этого человека
+    const index = store.index('personName');
+    const range = IDBKeyRange.only(personName);
+    const getAllRequest = index.getAll(range);
+    
+    getAllRequest.onsuccess = () => {
+      getAllRequest.result.forEach(notification => {
+        store.delete(notification.id);
+      });
+    };
+
+    const birthDateObj = new Date(birthDate);
+    const nextBirthday = getNextBirthday(birthDate);
+    
+    // Расписание уведомлений: за 7 дней, за 2 дня, за 1 день и в сам день (2 раза)
+    const notificationSchedules = [
+      { days: 7, time: '15:00', label: 'За неделю до дня рождения' },
+      { days: 2, time: '15:00', label: 'За два дня до дня рождения' },
+      { days: 1, time: '15:00', label: 'За день до дня рождения' },
+      { days: 0, time: '00:00', label: 'День рождения (полночь)' },
+      { days: 0, time: '15:00', label: 'День рождения (15:00)' }
+    ];
+
+    notificationSchedules.forEach(schedule => {
+      const notificationDate = new Date(nextBirthday);
+      notificationDate.setDate(notificationDate.getDate() - schedule.days);
+      const [hours, minutes] = schedule.time.split(':');
+      notificationDate.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+
+      if (notificationDate > new Date()) {
+        const notification = {
+          personName: personName,
+          title: `🎂 ${personName}`,
+          body: schedule.label,
+          scheduledTime: notificationDate.toISOString(),
+          icon: avatar,
+          tag: `${personName}-${schedule.days}-${schedule.time}`,
+          sent: false
+        };
+
+        store.add(notification);
+      }
+    });
+
+    db.close();
+    return true;
+  } catch (error) {
+    console.error('Ошибка при планировании уведомлений:', error);
+    return false;
+  }
+}
+
+async function isNotificationEnabled(personName) {
+  try {
+    const db = await openNotificationDB();
+    const transaction = db.transaction([NOTIFICATION_STORE], 'readonly');
+    const store = transaction.objectStore(NOTIFICATION_STORE);
+    const index = store.index('personName');
+    const range = IDBKeyRange.only(personName);
+    
+    return new Promise((resolve) => {
+      const request = index.getAll(range);
+      request.onsuccess = () => {
+        db.close();
+        resolve(request.result.length > 0);
+      };
+      request.onerror = () => {
+        db.close();
+        resolve(false);
+      };
+    });
+  } catch (error) {
+    console.error('Ошибка при проверке уведомлений:', error);
+    return false;
+  }
+}
+
+async function disableNotifications(personName) {
+  try {
+    const db = await openNotificationDB();
+    const transaction = db.transaction([NOTIFICATION_STORE], 'readwrite');
+    const store = transaction.objectStore(NOTIFICATION_STORE);
+    const index = store.index('personName');
+    const range = IDBKeyRange.only(personName);
+    const getAllRequest = index.getAll(range);
+    
+    getAllRequest.onsuccess = () => {
+      getAllRequest.result.forEach(notification => {
+        store.delete(notification.id);
+      });
+    };
+
+    db.close();
+    return true;
+  } catch (error) {
+    console.error('Ошибка при отключении уведомлений:', error);
+    return false;
+  }
+}
+
+async function showBirthdayPopup(birthdays, selectedDate) {
   const popup = document.getElementById('birthday-popup');
   const overlay = document.getElementById('overlay');
   const content = document.getElementById('popup-content');
@@ -256,13 +383,18 @@ function showBirthdayPopup(birthdays, selectedDate) {
         phrase = `Исполнилось ${ageOnThatDay} лет`;
       }
       return `
-        <div style="display: flex; align-items: center; gap: 1rem; margin: 1rem 0; padding: 1rem; background: rgba(255, 107, 107, 0.1); border-radius: 8px;">
-          <img src="${birthday.avatar}" alt="${birthday.name}" class="profile-avatar" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; cursor: pointer;">
-          <div>
-            <strong>${birthday.name}</strong><br>
-            ${phrase}<br>
-            Сейчас: ${currentAge} лет
+        <div style="display: flex; flex-direction: column; gap: 1rem; margin: 1rem 0;">
+          <div style="display: flex; align-items: center; gap: 1rem; padding: 1rem; background: rgba(255, 107, 107, 0.1); border-radius: 8px;">
+            <img src="${birthday.avatar}" alt="${birthday.name}" class="profile-avatar" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; cursor: pointer;">
+            <div>
+              <strong>${birthday.name}</strong><br>
+              ${phrase}<br>
+              Сейчас: ${currentAge} лет
+            </div>
           </div>
+          <button class="notification-btn" data-name="${birthday.name}" data-date="${birthday.date}" data-avatar="${birthday.avatar}" style="padding: 0.6rem 1rem; background: #ff6b6b; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.95rem; font-weight: 500; transition: background 0.2s;">
+            🔔 Включить уведомление
+          </button>
         </div>
       `;
     }).join('')}
@@ -281,6 +413,39 @@ function showBirthdayPopup(birthdays, selectedDate) {
     avatar.addEventListener('mouseenter', showAvatarZoom);
     avatar.addEventListener('mouseleave', hideAvatarZoom);
   });
+
+  // Обработчики для кнопок уведомлений
+  const notificationBtns = content.querySelectorAll('.notification-btn');
+  for (const btn of notificationBtns) {
+    const name = btn.dataset.name;
+    const isEnabled = await isNotificationEnabled(name);
+    
+    if (isEnabled) {
+      btn.textContent = '✅ Уведомления включены';
+      btn.style.background = '#4CAF50';
+      btn.disabled = true;
+    }
+    
+    btn.addEventListener('click', async (e) => {
+      const personName = e.target.dataset.name;
+      const birthDate = e.target.dataset.date;
+      const avatar = e.target.dataset.avatar;
+      
+      const isCurrentlyEnabled = await isNotificationEnabled(personName);
+      
+      if (isCurrentlyEnabled) {
+        await disableNotifications(personName);
+        e.target.textContent = '🔔 Включить уведомление';
+        e.target.style.background = '#ff6b6b';
+        e.target.disabled = false;
+      } else {
+        await scheduleNotifications(personName, birthDate, avatar);
+        e.target.textContent = '✅ Уведомления включены';
+        e.target.style.background = '#4CAF50';
+        e.target.disabled = false;
+      }
+    });
+  }
 }
 
 function showAvatarZoom(event) {
@@ -331,6 +496,51 @@ document.getElementById('next-year').addEventListener('click', () => {
   document.getElementById('current-year').textContent = currentYear;
   renderAllCalendars(currentYear);
 });
+
+// Функция для проверки и отправки уведомлений при открытой странице
+async function checkAndSendNotifications() {
+  try {
+    const db = await openNotificationDB();
+    const transaction = db.transaction([NOTIFICATION_STORE], 'readwrite');
+    const store = transaction.objectStore(NOTIFICATION_STORE);
+    const request = store.getAll();
+
+    request.onsuccess = () => {
+      const notifications = request.result;
+      const now = new Date();
+
+      notifications.forEach(notification => {
+        if (!notification.sent) {
+          const notifTime = new Date(notification.scheduledTime);
+          // Отправляем уведомление если время пришло (с допуском 1 минута)
+          if (notifTime <= now) {
+            if ('Notification' in window && Notification.permission === 'granted') {
+              new Notification(notification.title, {
+                body: notification.body,
+                icon: notification.icon,
+                badge: 'https://i.imgur.com/1sd499C.png',
+                tag: notification.tag
+              });
+            }
+
+            // Отмечаем как отправленное
+            notification.sent = true;
+            store.put(notification);
+          }
+        }
+      });
+
+      db.close();
+    };
+
+    request.onerror = () => {
+      console.error('Ошибка при проверке уведомлений:', request.error);
+      db.close();
+    };
+  } catch (error) {
+    console.error('Ошибка при проверке уведомлений:', error);
+  }
+}
 
 // Функция для загрузки всех изображений
 function preloadAllMedia() {
@@ -409,6 +619,220 @@ function hideLoader() {
   window.scrollTo(0, 0);
 }
 
+// Инициализация Service Worker для уведомлений
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('pages/pgCALENDAR/notification-worker.js').then(registration => {
+    console.log('Service Worker зарегистрирован:', registration);
+    // Подписываемся на push от backend
+    subscribeToPush();
+  }).catch(error => {
+    console.log('Ошибка при регистрации Service Worker:', error);
+  });
+}
+
+// ==================== BACKEND INTEGRATION ====================
+
+const BACKEND_URL = 'http://localhost:3000'; // Измените на URL вашего сервера
+
+// Функция для подписки на push уведомления с backend
+async function subscribeToPush() {
+  if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+    console.log('Push не поддерживается');
+    return;
+  }
+
+  try {
+    const registration = await navigator.serviceWorker.ready;
+    
+    // Получаем публичный VAPID ключ с сервера
+    const response = await fetch(`${BACKEND_URL}/api/vapid-public-key`);
+    const data = await response.json();
+    const publicKey = data.publicKey;
+
+    // Проверяем, не подписаны ли уже
+    const subscription = await registration.pushManager.getSubscription();
+    
+    if (subscription) {
+      console.log('✅ Уже подписаны на push');
+      return;
+    }
+
+    // Подписываемся на push
+    const newSubscription = await registration.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: urlBase64ToUint8Array(publicKey)
+    });
+
+    console.log('✅ Подписка на push создана');
+
+    // Отправляем подписку на backend
+    await fetch(`${BACKEND_URL}/api/subscribe`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newSubscription)
+    });
+
+    console.log('✅ Подписка отправлена на сервер');
+    showNotificationToast('✓ Связь с сервером установлена');
+
+  } catch (error) {
+    console.error('Ошибка при подписке на push:', error);
+  }
+}
+
+// Функция для конвертации публичного ключа
+function urlBase64ToUint8Array(base64String) {
+  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+  const base64 = (base64String + padding)
+    .replace(/\-/g, '+')
+    .replace(/_/g, '/');
+
+  const rawData = window.atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+
+  for (let i = 0; i < rawData.length; ++i) {
+    outputArray[i] = rawData.charCodeAt(i);
+  }
+
+  return outputArray;
+}
+
+// Функция для отправки тестового push уведомления с backend
+async function sendTestPushFromBackend() {
+  try {
+    const response = await fetch(`${BACKEND_URL}/api/send-test`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
+
+    const data = await response.json();
+    
+    if (data.success) {
+      showNotificationToast(`✓ ${data.message}`);
+    } else {
+      showNotificationToast(`❌ Ошибка: ${data.error}`);
+    }
+  } catch (error) {
+    console.error('Ошибка при отправке тестового уведомления:', error);
+    showNotificationToast('❌ Ошибка подключения к серверу');
+  }
+}
+
+// Запрос прав на уведомления при загрузке страницы
+if ('Notification' in window && Notification.permission === 'default') {
+  Notification.requestPermission();
+}
+
+// Обработчик кнопки включения уведомлений
+document.addEventListener('DOMContentLoaded', () => {
+  const notifyBtn = document.getElementById('enable-notifications-btn');
+  if (notifyBtn) {
+    if ('Notification' in window) {
+      const updateButtonState = () => {
+        if (Notification.permission === 'granted') {
+          notifyBtn.textContent = '✅ Уведомления разрешены';
+          notifyBtn.style.background = '#4CAF50';
+          notifyBtn.disabled = true;
+          notifyBtn.classList.remove('loading');
+          notifyBtn.classList.add('success');
+        } else if (Notification.permission === 'denied') {
+          notifyBtn.textContent = '❌ Уведомления запрещены';
+          notifyBtn.style.background = '#999';
+          notifyBtn.disabled = true;
+          notifyBtn.classList.remove('loading');
+        }
+      };
+
+      updateButtonState();
+
+      notifyBtn.addEventListener('click', () => {
+        if (Notification.permission === 'default') {
+          // Добавляем анимацию загрузки
+          notifyBtn.classList.add('loading');
+          notifyBtn.disabled = true;
+          notifyBtn.textContent = 'Разрешение...';
+
+          Notification.requestPermission().then((permission) => {
+            notifyBtn.classList.remove('loading');
+            
+            if (permission === 'granted') {
+              // Показываем уведомление об успехе
+              showNotificationToast('Уведомления включены!');
+              
+              // Небольшая задержка для плавной анимации
+              setTimeout(() => {
+                updateButtonState();
+              }, 300);
+            } else {
+              updateButtonState();
+            }
+          });
+        }
+      });
+    } else {
+      notifyBtn.textContent = '⚠️ Уведомления не поддерживаются';
+      notifyBtn.disabled = true;
+    }
+  }
+});
+
+// Функция для показа toast уведомления
+function showNotificationToast(message) {
+  const toast = document.createElement('div');
+  toast.className = 'notification-toast';
+  toast.textContent = message;
+  document.body.appendChild(toast);
+
+  // Убираем toast через 3 секунды
+  setTimeout(() => {
+    toast.classList.add('fadeOut');
+    setTimeout(() => {
+      toast.remove();
+    }, 400);
+  }, 3000);
+}
+
+// Функция для отправки тестового уведомления
+function sendTestNotification() {
+  if ('Notification' in window && Notification.permission === 'granted') {
+    new Notification('🧪 Тестовое уведомление PG78', {
+      body: 'Это тестовое уведомление. Система уведомлений работает корректно! ✓',
+      icon: 'https://i.imgur.com/1sd499C.png',
+      badge: 'https://i.imgur.com/1sd499C.png',
+      tag: 'test-notification',
+      requireInteraction: false
+    });
+    showNotificationToast('✓ Тестовое уведомление отправлено!');
+  } else if ('Notification' in window) {
+    showNotificationToast('⚠️ Сначала разрешите уведомления');
+  } else {
+    showNotificationToast('❌ Уведомления не поддерживаются');
+  }
+}
+
+// Обработчик для кнопки тестирования
+document.addEventListener('DOMContentLoaded', () => {
+  const testBtn = document.getElementById('test-notification-btn');
+  if (testBtn) {
+    testBtn.addEventListener('click', () => {
+      if ('Notification' in window) {
+        if (Notification.permission === 'granted') {
+          // Пытаемся отправить через backend, если доступен
+          sendTestPushFromBackend();
+        } else if (Notification.permission === 'default') {
+          showNotificationToast('⚠️ Сначала разрешите уведомления');
+        } else {
+          showNotificationToast('❌ Уведомления заблокированы в браузере');
+        }
+      }
+    });
+  }
+});
+
 // Initialization + прелоадер только для календаря
 document.addEventListener('DOMContentLoaded', () => {
   // отрисовываем данные заранее, но анимации включим только после прелоадера
@@ -431,5 +855,9 @@ window.addEventListener("load", () => {
   window.scrollTo(0, 0);
   // Начинаем загрузку всех медиа-файлов
   preloadAllMedia();
+
+  // Проверяем уведомления при загрузке и затем каждую минуту
+  checkAndSendNotifications();
+  setInterval(checkAndSendNotifications, 60000); // Проверка каждую минуту
 });
 

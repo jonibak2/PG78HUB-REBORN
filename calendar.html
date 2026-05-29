@@ -46,6 +46,107 @@
     #calendar-page-content {
       display: none;
     }
+
+    /* Анимации для кнопки уведомлений */
+    @keyframes pulse-btn {
+      0%, 100% { 
+        box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.7);
+      }
+      50% { 
+        box-shadow: 0 0 0 10px rgba(255, 107, 107, 0);
+      }
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes slideIn {
+      from { 
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to { 
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes checkmark {
+      0% { 
+        transform: scale(0);
+        opacity: 0;
+      }
+      50% { 
+        transform: scale(1.2);
+      }
+      100% { 
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    #enable-notifications-btn.loading {
+      pointer-events: none;
+      animation: pulse-btn 2s infinite;
+    }
+
+    #enable-notifications-btn.loading::before {
+      content: '';
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      margin-right: 6px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 1s linear infinite;
+      vertical-align: middle;
+    }
+
+    #enable-notifications-btn.success {
+      animation: slideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+    }
+
+    .notification-toast {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: linear-gradient(135deg, #4CAF50, #45a049);
+      color: white;
+      padding: 16px 24px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+      font-weight: 500;
+      animation: slideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .notification-toast::before {
+      content: '✓';
+      font-size: 18px;
+      font-weight: bold;
+      animation: checkmark 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .notification-toast.fadeOut {
+      animation: fadeOut 0.4s ease-out forwards;
+    }
+
+    @keyframes fadeOut {
+      from { 
+        opacity: 1;
+        transform: translateY(0);
+      }
+      to { 
+        opacity: 0;
+        transform: translateY(20px);
+      }
+    }
   </style>
 </head>
 <body>
@@ -59,6 +160,8 @@
     <div id="calendar-page-content">
       <div class="header-buttons">
         <a href="https://jonibak2.github.io/PG78HUB-REBORN/" class="back-button glow-on-hover">← Назад в хаб</a>
+        <button id="enable-notifications-btn" class="glow-on-hover" style="background: #ff6b6b; color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 6px; cursor: pointer; font-size: 1rem; transition: background 0.2s;">🔔 Разрешить уведомления</button>
+        <button id="test-notification-btn" class="glow-on-hover" style="background: #ff9800; color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 6px; cursor: pointer; font-size: 1rem; transition: background 0.2s; margin-left: 0.5rem;">🧪 Тест уведомления</button>
         <a href="https://github.com/jonibak2" class="github-button github-glow-btn" aria-label="GitHub">
           <img src="https://cdn-icons-png.flaticon.com/512/25/25231.png" alt="GitHub">
         </a>
