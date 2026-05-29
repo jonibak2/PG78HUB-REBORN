@@ -1,0 +1,24 @@
+{
+  "name": "pg78-birthday-notifications",
+  "version": "1.0.0",
+  "description": "Birthday notification system with Web Push API",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "cd backend && node server.js",
+    "dev": "cd backend && npm run dev",
+    "install:backend": "cd backend && npm install",
+    "generate-keys": "cd backend && npm run generate-keys"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "keywords": [
+    "birthday",
+    "notifications",
+    "web-push",
+    "push-api"
+  ],
+  "author": "PG78",
+  "license": "MIT",
+  "private": true
+}

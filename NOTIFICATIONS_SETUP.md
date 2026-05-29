@@ -66,7 +66,23 @@ const BACKEND_URL = 'http://localhost:3000'; // Или URL вашего серв
 
 ## 🌍 Развертывание на VPS
 
-### Быстро (DigitalOcean)
+### Быстро (Render.com) ⭐ RECOMMENDED
+
+**Самый простой способ! Ничего не нужно устанавливать.**
+
+1. Отправьте репозиторий на GitHub
+2. Откройте https://render.com
+3. Подключите репозиторий
+4. Добавьте VAPID ключи
+5. Нажмите Deploy!
+
+**Все готово за 5 минут!**
+
+👉 **Полный гайд:** [backend/RENDER_DEPLOYMENT.md](backend/RENDER_DEPLOYMENT.md)
+
+---
+
+### Полный гайд по VPS
 
 **Следуйте этим инструкциям:**
 ```
