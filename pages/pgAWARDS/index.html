@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PGA25 — Голосование</title>
+<meta name="description" content="PGA26 — голосование за номинации.">
+
+<!-- Google Fonts: Manrope for display, Inter for body -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ============ HEADER ============ -->
+<header class="site-header" id="siteHeader">
+  <div class="header-inner">
+    <a href="#top" class="logo" id="pageLogo">PG <span>Awards</span></a>
+
+    <nav class="year-nav" id="yearNav">
+      <button class="year-tab" data-year="23">PGA23</button>
+      <button class="year-tab" data-year="24">PGA24</button>
+      <button class="year-tab" data-year="25">PGA25</button>
+      <button class="year-tab" data-year="26" disabled>PGA26</button>
+      <span class="year-tab-indicator" id="yearIndicator" aria-hidden="true"></span>
+    </nav>
+
+    <a href="#categories" class="btn btn-primary btn-vote-header">
+      <span>ГОЛОСОВАТЬ</span>
+      <svg class="icon-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M3.5 8H12.5M12.5 8L8.5 4M12.5 8L8.5 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+
+    <button class="menu-toggle" id="menuToggle" aria-label="Открыть меню" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+
+  <!-- Mobile nav -->
+  <nav class="mobile-nav" id="mobileNav">
+    <button class="year-tab" data-year="23">PGA23</button>
+    <button class="year-tab" data-year="24">PGA24</button>
+    <button class="year-tab" data-year="25">PGA25</button>
+    <button class="year-tab" data-year="26" disabled>PGA26</button>
+    <a href="#categories" class="btn btn-primary btn-vote-mobile">
+      <span>ГОЛОСОВАТЬ</span>
+    </a>
+  </nav>
+</header>
+
+<main id="top">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero reveal">
+    <div class="hero-inner">
+      <div class="hero-left">
+        <p class="eyebrow" id="heroEyebrow"></p>
+        <h1 class="hero-title" id="heroTitle">PGA26</h1>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ TOP VIDEO SECTION ============ -->
+  <section class="video-section reveal">
+    <div class="video-wrap">
+      <p class="video-caption" id="topVideoCaption">Откат года</p>
+      <div class="video-frame">
+        <video class="video-player" id="topVideo" controls preload="metadata" playsinline>
+          <source id="topVideoSource" src="assets/pgAWARDS25/goda.mp4" type="video/mp4">
+        </video>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FEATURED CATEGORIES ============ -->
+  <section class="featured-section" id="categories">
+    <div class="section-head reveal">
+      <p class="eyebrow">Основные номинации</p>
+      <h2 class="section-title" id="featuredTitle">Номинации</h2>
+    </div>
+
+    <div class="featured-grid" id="featuredContent"></div>
+  </section>
+
+  <!-- ============ MAIN CATEGORIES GRID ============ -->
+  <section class="main-categories-section">
+    <div class="section-head reveal">
+      <p class="eyebrow">Все номинации</p>
+      <h2 class="section-title" id="categoriesTitle">Номинации</h2>
+    </div>
+
+    <div class="year-content reveal" id="yearContent"></div>
+  </section>
+
+  <!-- ============ BOTTOM VIDEO SECTION ============ -->
+  <section class="video-section video-section--bottom reveal">
+    <div class="section-head reveal ceremony-head">
+      <p class="eyebrow">Церемония</p>
+      <h2 class="section-title ceremony-title" id="ceremonyTitle">❤🖤❤</h2>
+    </div>
+    <div class="video-wrap">
+      <div class="movie-player-wrap" id="ceremonyMediaWrap">
+        <video class="movie-player" controls preload="metadata" playsinline>
+          <source src="assets/pgAWARDS23/happynewyear.mp4" type="video/mp4">
+        </video>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <p class="footer-logo" id="footerLogo">PGA26</p>
+    <p class="footer-copy">© 2026</p>
+    <div class="footer-social">
+      <a href="https://discord.gg/ff9epMfUk7" class="social-icon" aria-label="Discord" target="_blank" rel="noreferrer">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M19.5 5.5a14.7 14.7 0 0 0-3.6-1.1c-.15.27-.32.63-.44.9a13.2 13.2 0 0 0-4.1 0c-.12-.27-.3-.63-.46-.9A14.8 14.8 0 0 0 7.3 5.5C4.8 8.3 4.1 11 4.2 13.7a14.9 14.9 0 0 0 4.6 2.3c.37-.5.7-.98.98-1.5a9.8 9.8 0 0 1-1.57-.76l.4-.31a10.4 10.4 0 0 0 8.7 0l.4.31a9.8 9.8 0 0 1-1.57.76c.28.52.61 1 0 .98 1.4-.46 2.8-1.2 4.6-2.3.2-3.1-.4-5.8-2.2-8.2ZM9.4 12c-.9 0-1.6-.8-1.6-1.8s.7-1.8 1.6-1.8c.9 0 1.6.8 1.6 1.8s-.7 1.8-1.6 1.8Zm5.2 0c-.9 0-1.6-.8-1.6-1.8s.7-1.8 1.6-1.8c.9 0 1.6.8 1.6 1.8s-.7 1.8-1.6 1.8Z" fill="currentColor"/></svg>
+      </a>
+      <a href="https://github.com/jonibak2" class="social-icon" aria-label="GitHub" target="_blank" rel="noreferrer">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2.5a10 10 0 0 0-3.16 19.18c.5.1.68-.22.68-.48v-1.7c-2.78.6-3.37-1.2-3.37-1.2-.45-1.16-1.1-1.47-1.1-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.88 1.5 2.31 1.07 2.87.82.09-.64.35-1.07.63-1.32-2.22-.25-4.56-1.11-4.56-4.95 0-1.09.39-1.99 1.03-2.69-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.03A9.62 9.62 0 0 1 12 6.7c.85 0 1.71.12 2.51.35 1.91-1.3 2.75-1.03 2.75-1.03.55 1.37.2 2.39.1 2.64.64.7 1.03 1.6 1.03 2.69 0 3.85-2.35 4.69-4.58 4.94.36.31.68.92.68 1.86v2.76c0 .27.18.58.69.48A10 10 0 0 0 12 2.5Z" fill="currentColor"/></svg>
+      </a>
+    </div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
