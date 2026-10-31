@@ -1,0 +1,24 @@
+{
+  "id": "./",
+  "name": "PG78",
+  "short_name": "PG78",
+  "start_url": "./",
+  "scope": "./",
+  "display": "browser",
+  "background_color": "#0d0d20",
+  "theme_color": "#0d0d20",
+  "icons": [
+    {
+      "src": "assets/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

@@ -98,7 +98,7 @@ function renderYear(year) {
   const recapSources = { '23': 'assets/pgAWARDS23/yakakayu.mp4', '24': 'assets/pgAWARDS24/perdez.mp4', '25': 'assets/pgAWARDS25/goda.mp4' };
   get('recap-content').innerHTML = playerMarkup(recapSources[year], `Откат 20${year} года`);
   setupVideo(get('recap-content'));
-  document.title = `PGA${year} · Архив PG Awards`;
+  document.title = 'PG78';
   const url = new URL(window.location.href);
   url.searchParams.set('year', `20${year}`);
   history.replaceState(null, '', url);
