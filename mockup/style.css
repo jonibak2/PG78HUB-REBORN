@@ -96,6 +96,9 @@
 .masthead-link:focus-visible{outline-offset:-5px}
 .birthday-person{display:block;text-decoration:none}
 .birthday-person:hover b,.birthday-person:hover p{color:#fff3bc}
+.banner-character{display:block;width:100%;height:180px;object-fit:contain}
+@media(max-width:800px){.banner-character{height:155px}}
+@media(max-width:540px){.banner-character{height:135px}}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 .sort-scoreline{text-align:right;margin:0 2px 5px}
 .avatars{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));justify-items:center;gap:12px 8px}
