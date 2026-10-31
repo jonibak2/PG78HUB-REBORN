@@ -1,13 +1,15 @@
+# PG78
 
-# Hi, I'm Jonathan! 👋
+Сайт сообщества PG78 в стиле старого интернета.
 
-This is my biggest non commercial project. 💕
+[Открыть сайт](https://jonibak2.github.io/PG78HUB-REBORN/)
 
-This site is a collection of sites for my friends. Mostly annual awards C:
+- `index.html` — главная страница, лента, скриншоты и гостевая книга.
+- `calendar.html` — календарь дней рождения.
+- `pages/pgAWARDS/index.html` — архив PG Awards за 2023–2025 годы.
+- `guestbook.js` — подключение гостевой книги к Firebase Realtime Database.
+- `database.rules.json` — правила доступа к базе.
 
-https://jonibak2.github.io/PG78HUB-REBORN/
+GitHub Pages публикуется из корня ветки `main`. Папка `mockup` содержит переход на главную для старых ссылок.
 
-
-
-![Logo](https://media.discordapp.net/attachments/784182563114582066/1449899441522872511/signature.png?ex=69409394&is=693f4214&hm=e38962b4f51fbb06bee65a8d1cb3c1fefb901b9072130cf2928e1ca20518689c&=&format=webp&quality=lossless&width=796&height=165)
-
+Для локального просмотра: `python -m http.server 4180`, затем `http://localhost:4180/`.

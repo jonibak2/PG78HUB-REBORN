@@ -1,95 +1,51 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-  <link rel="icon" type="image/png" href="https://i.imgur.com/1sd499C.png">
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Календарь дней рождений PG78</title>
-  <link rel="stylesheet" href="pages/pgCALENDAR/calendar_styles.css">
-  <style>
-    /* Прелоадер только для календаря */
-    #calendar-loader {
-      position: fixed;
-      inset: 0;
-      background: #000;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-    }
-
-    #calendar-loader img {
-      max-width: 260px;
-      width: 80%;
-      height: auto;
-    }
-
-    .loader-bar {
-      width: 60%;
-      max-width: 420px;
-      height: 6px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.15);
-      margin-top: 18px;
-      overflow: hidden;
-    }
-
-    .loader-progress {
-      height: 100%;
-      width: 0;
-      background: #ff0000;
-      transition: width 0.3s ease;
-    }
-
-    /* Контент страницы скрыт, пока идёт прелоадер */
-    #calendar-page-content {
-      display: none;
-    }
-  </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Календарь дней рождения · PG78</title>
+  <link rel="icon" href="assets/pgCALENDAR/pg78.jpg">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="pages/pgCALENDAR/calendar.css">
+  <script src="ticker.js" defer></script>
+  <script src="pages/pgCALENDAR/calendar.js" defer></script>
 </head>
 <body>
-  <div id="calendar-loader">
-    <img src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExeWNuMXRjMzI2dHphd3RjejdzZGI3OGdqM3Jlenhqa3V3anY2c2M1NCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/GCj1YPjqcNErSJUr6R/giphy.gif" alt="Loading">
-    <div class="loader-bar">
-      <div class="loader-progress"></div>
-    </div>
-  </div>
+<div class="site calendar-site" id="top">
+  <header class="masthead">
+    <a class="masthead-link" href="index.html#top" aria-label="На главную страницу PG78"></a>
+    <div class="orb" aria-hidden="true">78</div>
+    <div class="wordmark"><div class="welcome-small">WELCOME TO THE WORLD OF</div><h1>PG<span>78</span></h1></div>
+    <div class="header-note" aria-hidden="true"><img class="banner-character" src="assets/banner-character.png" alt=""></div>
+  </header>
+  <nav class="topnav" aria-label="Разделы сайта"><a href="index.html#top">Главная</a><span>✦</span><a href="index.html#feed">Лента</a><span>✦</span><a href="calendar.html" aria-current="page">Календарь</a><span>✦</span><a href="pages/pgAWARDS/index.html">PG Awards</a><span>✦</span><a href="https://www.ngplus.top/">ngplus.top</a></nav>
+  <div class="ticker"><b>PG78 CALENDAR »</b><div><span>7878787878787878787878</span></div></div>
 
-    <div id="calendar-page-content">
-      <div class="header-buttons">
-        <a href="https://jonibak2.github.io/PG78HUB-REBORN/" class="back-button glow-on-hover">← Назад в хаб</a>
-        <a href="https://github.com/jonibak2" class="github-button github-glow-btn" aria-label="GitHub">
-          <img src="https://cdn-icons-png.flaticon.com/512/25/25231.png" alt="GitHub">
-        </a>
-      </div>
+  <div class="calendar-layout">
+    <aside class="calendar-aside">
+      <section class="panel"><h2>◆ НАВИГАЦИЯ</h2><div class="navbuttons"><a class="gem" href="index.html#top">Главная страница</a><a class="gem active" href="calendar.html">Дни рождения</a><a class="gem" href="index.html#feed">Лента событий</a><a class="gem gold" href="pages/pgAWARDS/index.html">PG Awards</a><a class="gem" href="https://www.ngplus.top/">ngplus.top</a><a class="gem" href="index.html#album">Наши люди</a></div></section>
+      <section class="panel next-panel"><h2>◆ СКОРО ПРАЗДНИК</h2><div id="next-birthday" class="pad centered"></div></section>
+      <section class="panel upcoming-panel"><h2>◆ БЛИЖАЙШИЕ ДАТЫ</h2><div class="upcoming-list" id="upcoming-list"></div></section>
+    </aside>
 
-    <main class="calendar-contain" style="max-width: 100%;">
-      <h1 style="text-align:center;margin-bottom:1rem;">Календарь дней рождений PG78</h1>
-      <div class="year-navigation">
-        <button id="prev-year" class="glow-on-hover">◀</button>
-        <span id="current-year"></span>
-        <button id="next-year" class="glow-on-hover">▶</button>
-      </div>
-      <div class="calendar-wrapper">
-        <aside class="calendar__sidebar">
-          <div class="content">
-            <h2 class="sidebar__heading">Ближайшие дни рождения</h2>
-            <ul id="upcoming-list" class="sidebar__list"></ul>
-          </div>
-        </aside>
-        <div id="all-calendars"></div>
-      </div>
+    <main class="calendar-main">
+      <section class="panel calendar-window" aria-labelledby="calendar-heading">
+        <h2 id="calendar-heading">◆ ДНИ РОЖДЕНИЯ <span id="birthday-total"></span></h2>
+        <div class="year-toolbar"><button type="button" class="native" id="prev-year" aria-label="Предыдущий год">&lt; Назад</button><strong id="current-year" aria-live="polite"></strong><button type="button" class="native" id="next-year" aria-label="Следующий год">Вперёд &gt;</button><button type="button" class="native today-button" id="today-button">Этот год</button></div>
+        <div class="month-jump" id="month-jump" aria-label="Перейти к месяцу"></div>
+        <div class="months-grid" id="all-calendars"></div>
+      </section>
     </main>
-
-    <div class="overlay" id="overlay"></div>
-    <div class="birthday-popup" id="birthday-popup">
-      <span class="close" id="close-popup">&times;</span>
-      <div id="popup-content"></div>
-    </div>
   </div>
+  <footer><div class="footer-links"><a href="index.html#top">На главную</a> | <a href="index.html#feed">Лента</a> | <a href="pages/pgAWARDS/index.html">PG Awards</a></div></footer>
+</div>
 
-  <script src="pages/pgCALENDAR/calendar_script.js"></script>
+<div class="calendar-overlay" id="calendar-overlay" hidden>
+  <section class="birthday-dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-title">
+    <div class="dialog-titlebar"><span id="dialog-title">День рождения</span><button type="button" class="dialog-close" id="dialog-close" aria-label="Закрыть">×</button></div>
+    <div id="dialog-content" class="dialog-content"></div>
+    <div class="dialog-actions"><button type="button" class="native" id="dialog-ok">Закрыть</button></div>
+  </section>
+</div>
 </body>
 </html>
-

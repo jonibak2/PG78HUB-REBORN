@@ -1,0 +1,42 @@
+.awards-site{width:1120px}
+.awards-layout{display:grid;grid-template-columns:184px minmax(0,1fr);gap:12px;align-items:start}
+.awards-main{min-width:0}
+.year-buttons .gem{width:100%;cursor:pointer}
+.year-buttons .gem:disabled{opacity:.4;cursor:default;filter:none}
+.archive-links{display:flex;flex-direction:column;gap:0;padding:5px 10px}
+.archive-links a{padding:8px 0;border-bottom:1px dotted #544a6c;font:10px Tahoma,Arial,sans-serif}
+.archive-links a:last-child{border:0}
+.awards-badge{width:155px;margin:18px auto}
+
+.awards-year-mark{display:flex;justify-content:center;align-items:center;min-height:140px;padding:18px;background:radial-gradient(ellipse at center,#28223f,#0d0d20 75%)}
+.awards-year-mark img{display:block;max-width:75%;width:auto;max-height:115px;object-fit:contain}
+.awards-year-mark strong{color:#e6d39b;font:italic bold 65px Georgia,serif;text-shadow:3px 3px #51416f,5px 5px #000}
+.ceremony-content{padding:10px}
+.ceremony-link{position:relative;display:block;border:3px ridge #9389a8;background:#05050b;aspect-ratio:16/9;overflow:hidden;text-decoration:none}
+.ceremony-link img{display:block;width:100%;height:100%;object-fit:cover}
+.ceremony-link span{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);padding:8px 13px;white-space:nowrap;border:2px outset #ddd4bd;background:#25213b;color:#fff2bc;font:bold 11px Tahoma,Arial,sans-serif;box-shadow:2px 2px #080611}
+.ceremony-link:hover span{background:#413658}
+.featured-grid{max-width:620px;margin:0 auto;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:12px}
+.featured-card,.nomination-card{min-width:0;margin:0;border:2px outset #8d829f;background:#171428;box-shadow:2px 2px #04030c;display:flex;flex-direction:column}
+.featured-card-overlay{display:none}
+.featured-card-content{order:-1}
+.featured-card-title,.nomination-title{margin:0;min-height:30px;padding:6px 8px;border-bottom:2px ridge #827896;background:#292541;color:#e8d8a6;font:bold 11px/1.4 Tahoma,Arial,sans-serif}
+.nomination-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;padding:12px}
+.nomination-card .nomination-title{min-height:43px;display:flex;align-items:center}
+.award-image-button{display:block;width:100%;padding:5px;border:0;background:#090813;cursor:zoom-in;flex:1}
+.award-image-button img{display:block;width:100%;height:auto;object-fit:contain}
+.featured-card .award-image-button img{height:auto;object-fit:contain}
+.award-image-button:hover{background:#272139}
+#nomination-count{color:#b4a8c6;font:9px 'Courier New',monospace}
+.ceremony-content .retro-player{margin:0}
+.award-overlay[hidden]{display:none}
+.award-overlay{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:15px;background:#03030de6}
+.award-dialog{max-width:95vw;max-height:95dvh;border:3px outset #a49cc0;background:#302e4d;box-shadow:5px 5px #000}
+.award-dialog-bar{display:flex;align-items:center;justify-content:space-between;gap:15px;min-height:30px;padding:3px 4px 3px 9px;background:linear-gradient(90deg,#514b85,#202144);color:#ead496;font:bold 11px Tahoma,Arial,sans-serif}
+.award-dialog-bar button{padding:0 5px;min-height:21px;font:bold 15px Arial}
+.award-image-wrap{padding:5px;overflow:auto;max-height:calc(95dvh - 38px);background:#080710}
+.award-image-wrap img{display:block;max-width:85vw;max-height:calc(95dvh - 50px);width:auto;height:auto;object-fit:contain;margin:auto}
+body.award-dialog-open{overflow:hidden}
+@media(max-width:850px){.awards-layout{grid-template-columns:160px minmax(0,1fr)}.nomination-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){.awards-layout{grid-template-columns:1fr}.awards-aside>.panel:not(:first-child),.awards-badge{display:none}.year-buttons.navbuttons{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}.year-buttons .gem{margin:0;padding:8px 2px}.awards-aside .panel{margin-bottom:0}.awards-year-mark{min-height:120px}.awards-year-mark img{max-height:95px}.featured-grid,.nomination-grid{padding:8px;gap:8px}.featured-card-title,.nomination-title{font-size:10px}.ceremony-content{padding:7px}.ceremony-link span{font-size:9px;padding:6px 8px}}
+@media(max-width:390px){.nomination-card .nomination-title{font-size:9px}}

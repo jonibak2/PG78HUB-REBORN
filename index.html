@@ -1,58 +1,61 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-  <link rel="icon" type="image/png" href="https://i.imgur.com/1sd499C.png">
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Хаб PG78</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title> PG78 — наша домашняя страничка </title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="hub-loader">
-    <img src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExeWNuMXRjMzI2dHphd3RjejdzZGI3OGdqM3Jlenhqa3V3anY2c2M1NCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/GCj1YPjqcNErSJUr6R/giphy.gif" alt="Loading">
-    <div class="loader-bar">
-      <div class="loader-progress"></div>
-    </div>
+<div class="site" id="top">
+  <header class="masthead">
+    <a class="masthead-link" href="index.html#top" aria-label="На главную страницу PG78"></a>
+    <div class="orb" aria-hidden="true">78</div>
+    <div class="wordmark"><div class="welcome-small">WELCOME TO THE WORLD OF</div><h1>PG<span>78</span></h1></div>
+    <div class="header-note" aria-hidden="true"><img class="banner-character" src="assets/banner-character.png" alt=""></div>
+  </header>
+  <nav class="topnav" aria-label="Основная навигация"><a href="#top">Главная</a><span>✦</span><a href="#feed">Лента</a><span>✦</span><a href="calendar.html">Календарь</a><span>✦</span><a href="pages/pgAWARDS/index.html">PG Awards</a><span>✦</span><a href="https://www.ngplus.top/">ngplus.top</a><span>✦</span><a href="#guestbook">Гостевая</a></nav>
+  <div class="ticker"><b>НОВОСТИ СЕРВЕРА »</b><div><span>7878787878787878787878</span></div></div>
+  <div class="columns">
+    <aside class="left-column">
+      <section class="panel"><h2>◆ НАВИГАЦИЯ</h2><div class="navbuttons"><a class="gem active" href="#top">⌂ Главная страница</a><a class="gem" href="#feed">Лента событий</a><a class="gem" href="calendar.html">▦ Дни рождения</a><a class="gem gold" href="pages/pgAWARDS/index.html"> PG Awards <em>HOT!</em></a><a class="gem" href="https://www.ngplus.top/">ngplus.top</a><a class="gem" href="#album">▧ Наши фотографии</a><a class="gem" href="#guestbook"> Гостевая книга</a><a class="gem" href="https://github.com/jonibak2"> Страничка автора</a></div></section>
+      <section class="panel about"><h2>◆ КТО МЫ ТАКИЕ?</h2><img src="assets/pgCALENDAR/pg78.jpg" alt="Маскот сообщества PG78" class="mascot"><p>Мы мать твою семья сучка ебаная</p><p>мразота бабища ебучая</p><p>буцефал украинский сука<br>ебучий всадник ты хаоса</p></section>
+      <section class="panel"><h2>◆ НАШ БАННЕР</h2><div class="pad centered"><a class="mini-banner pg-banner" href="#top"><strong>PG78</strong><small>место встречи своих</small></a><p class="micro">Забери нас к себе на сайт!</p><button class="native" id="copy-banner">Скопировать HTML</button><span id="copy-status" class="micro" role="status"></span></div></section>
+    </aside>
+    <main>
+      <section class="panel welcome"><h2>✦ ДОБРО ПОЖАЛОВАТЬ НА PG78 ✦</h2><div class="pad"><h3>Васапчик, путник интернета!</h3><p>Если ты сюда попал случайно то лучше выходи c:<br>Это сайт наших брос и систерс PG78<br>Авардсы, дни рождения, мои проекты</p><p>Кароче новый дизайн ребята!!!</p><p>Пользуйтесь!!</p></div></section>
+      <div class="chain" aria-hidden="true">✧ ─── ◇ ─── ✧ ─── ◇ ─── ✧ ─── ◇ ─── ✧</div>
+      <section class="panel screenshot-carousel" id="screenshots" aria-label="Скриншоты PG78" aria-roledescription="карусель" tabindex="0">
+        <h2>◆ НАШИ СКРИНШОТЫ<span class="window-buttons" aria-hidden="true"><i class="window-minimize"></i><i class="window-maximize"></i><i class="window-close"></i></span></h2>
+        <a class="screenshot-screen" id="screenshot-link" href="assets/screenshots/1.jpg" target="_blank" rel="noopener noreferrer" aria-label="Открыть скриншот в полном размере"><img id="screenshot-image" src="assets/screenshots/1.jpg" alt="Скриншот 1" loading="lazy" decoding="async"></a>
+        <div class="screenshot-controls"><button class="native" id="screenshot-prev" type="button" aria-label="Предыдущий скриншот">&lt; Назад</button><span id="screenshot-count" role="status" aria-live="polite">1 / 50</span><button class="native" id="screenshot-next" type="button" aria-label="Следующий скриншот">Вперёд &gt;</button></div>
+        <span class="screenshot-status" id="screenshot-status" role="status"></span>
+      </section>
+      <section class="panel news-feed" id="feed"><h2>◆ ЛЕНТА PG78</h2>
+        <article class="feed-post"><div class="feed-meta"><time class="feed-title" datetime="2025">2025</time><span class="window-buttons" aria-hidden="true"><i class="window-minimize"></i><i class="window-maximize"></i><i class="window-close"></i></span></div><a class="feed-video feed-video-link" href="https://www.youtube.com/watch?v=KlwKqslUrGA" target="_blank" rel="noopener noreferrer" aria-label="Смотреть PGA25 на YouTube"><img src="pages/pgAWARDS/assets/thumnails/pgA25_Thumb.jpg" alt="Обложка PGA25"><span>СМОТРЕТЬ НА YOUTUBE »</span></a></article>
+        <article class="feed-post"><div class="feed-meta"><span class="feed-title">RE</span><span class="window-buttons" aria-hidden="true"><i class="window-minimize"></i><i class="window-maximize"></i><i class="window-close"></i></span></div><div class="feed-image"><img src="assets/feed/game-scene.png" alt="Два персонажа в тёмном зале" loading="lazy"></div></article>
+        <article class="feed-post"><div class="feed-meta"><time class="feed-title" datetime="2024">2024</time><span class="window-buttons" aria-hidden="true"><i class="window-minimize"></i><i class="window-maximize"></i><i class="window-close"></i></span></div><a class="feed-video feed-video-link" href="https://www.youtube.com/watch?v=pxW-TnZgw5Y" target="_blank" rel="noopener noreferrer" aria-label="Смотреть PGA24 на YouTube"><img src="pages/pgAWARDS/assets/thumnails/pgA24_Thumb.jpg" alt="Обложка PGA24"><span>СМОТРЕТЬ НА YOUTUBE »</span></a></article>
+        <article class="feed-post sort-game" id="sort-game" aria-labelledby="sort-title"><div class="feed-meta"><span class="sr-only" id="sort-title">Сортировка шариков</span><span class="window-buttons" aria-hidden="true"><i class="window-minimize"></i><i class="window-maximize"></i><i class="window-close"></i></span></div><div class="sort-inner"><div class="sort-scoreline"><span id="sort-score">0 / 20</span></div><div class="sort-field" id="sort-field" aria-label="Разноцветные шарики"></div><div class="sort-baskets" id="sort-baskets"><button class="sort-basket" type="button" data-color="blue" aria-label="Корзинка для синих шариков"></button><button class="sort-basket" type="button" data-color="red" aria-label="Корзинка для красных шариков"></button><button class="sort-basket" type="button" data-color="yellow" aria-label="Корзинка для жёлтых шариков"></button><button class="sort-basket" type="button" data-color="green" aria-label="Корзинка для зелёных шариков"></button></div><div class="sort-bottom"><span id="sort-status" role="status" aria-live="polite"></span><button class="native" id="sort-restart" type="button">Заново</button></div></div></article>
+        <article class="feed-post"><div class="feed-meta"><span class="feed-title">boom</span><span class="window-buttons" aria-hidden="true"><i class="window-minimize"></i><i class="window-maximize"></i><i class="window-close"></i></span></div><div class="feed-image"><img src="assets/feed/minecraft-scene.gif" alt="Анимированный кадр из Minecraft" loading="lazy"></div></article>
+        <article class="feed-post"><div class="feed-meta"><time class="feed-title" datetime="2023">2023</time><span class="window-buttons" aria-hidden="true"><i class="window-minimize"></i><i class="window-maximize"></i><i class="window-close"></i></span></div><div class="retro-player" aria-label="Плеер PGA23"><div class="retro-screen"><video id="pga23-video" preload="metadata" playsinline disablepictureinpicture disableremoteplayback controlslist="noremoteplayback" aria-label="Видео PGA23"><source src="pages/pgAWARDS/assets/pgAWARDS23/happynewyear.mp4" type="video/mp4">Ваш браузер не поддерживает видео.</video></div><div class="retro-controls"><button id="pga23-toggle" class="retro-control retro-toggle" type="button" aria-label="Воспроизвести видео"></button><input id="pga23-progress" type="range" min="0" max="1000" value="0" aria-label="Перемотка видео"><span id="pga23-time" class="retro-time">0:00 / 0:00</span><label class="retro-volume">VOL <input id="pga23-volume" type="range" min="0" max="100" value="70" aria-label="Громкость видео"></label><button id="pga23-fullscreen" class="retro-control retro-fullscreen" type="button" aria-label="На весь экран"></button></div></div></article>
+      </section>
+      <section class="panel album" id="album"><h2>◆ ЛИЦА НАШЕГО ИНТЕРНЕТА</h2><div class="avatars" id="calendar-people"></div><div class="album-note">Наши люди. Наши легенды. Наш маленький интернет.</div></section>
+      <section class="panel guestbook" id="guestbook"><h2>◆ ГОСТЕВАЯ КНИГА</h2><div class="pad"><p class="guest-intro">Был здесь? Оставь пару слов на память!</p><form id="guest-form"><label>Имя: <input name="name" maxlength="32" required placeholder="Анонимный веб-сёрфер"></label><label>Сообщение: <textarea name="message" maxlength="400" required rows="2" placeholder="Всем привет из интернета!"></textarea></label><button class="native" id="guest-submit" type="submit" disabled>Оставить запись</button><small id="guest-status" class="guest-status" role="status" aria-live="polite">Подключаем гостевую книгу…</small></form><div id="entries" aria-live="polite"></div></div></section>
+    </main>
+    <aside class="right-column">
+      <section class="panel ngplus-panel"><h2>◆ NGPLUS.TOP</h2><a class="ngplus-link" href="https://www.ngplus.top/" target="_blank" rel="noopener noreferrer" aria-label="Перейти на ngplus.top"><img class="ngplus-wordmark" src="assets/ngplus/new-game-plus.png" alt="New Game Plus"><img class="ngplus-icon" src="assets/ngplus/ngplus-icon.png" alt=""></a></section>
+      <section class="panel birthday"><h2>◆ СКОРО ПРАЗДНИК</h2><div class="pad centered"><div class="birthday-heading">С днём рождения!</div><a class="birthday-person" id="birthday-person" href="calendar.html"><img id="birthday-avatar" src="assets/pgCALENDAR/andrew.png" alt=""><b id="birthday-name">Андрей</b><p id="birthday-date">1 ноября</p></a><span class="birthday-count" id="birthday-count">Скоро поздравляем!</span><a class="calendar-link" href="calendar.html">Весь календарь »</a></div></section>
+      <section class="panel radio"><h2>◆ PG78 RADIO</h2><div class="radio-launcher"><button class="radio-display" id="open-radio" type="button" aria-pressed="false">PG78 RADIO<small id="radio-status" role="status">НАЖМИ, ЧТОБЫ ВКЛЮЧИТЬ</small></button><audio id="radio-audio" src="assets/audio/pg78-radio.m4a" preload="none" loop></audio></div></section>
+      <section class="panel"><h2>◆ УГОЛОК ВЕБМАСТЕРА</h2><div class="badges social-badges"><a class="mini-banner html-badge" href="https://github.com/jonibak2" target="_blank" rel="noopener noreferrer"><img class="social-icon" src="assets/social/github.png" alt="" width="32" height="32"><span class="social-label"><strong>GitHub</strong><small>jonibak2</small></span></a><a class="mini-banner internet-badge" href="https://t.me/jonibak2" target="_blank" rel="noopener noreferrer"><img class="social-icon" src="assets/social/telegram.svg" alt="" width="32" height="32"><span class="social-label"><strong>Telegram</strong><small>jonibak2</small></span></a><a class="mini-banner best-badge" href="https://www.instagram.com/g00fyjonathan/" target="_blank" rel="noopener noreferrer"><img class="social-icon" src="assets/social/instagram.png" alt="" width="32" height="32"><span class="social-label"><strong>Instagram</strong><small>g00fyjonathan</small></span></a><a class="mini-banner no-badge" href="https://discord.gg/7dpGu75zMA" target="_blank" rel="noopener noreferrer"><img class="social-icon" src="assets/social/discord.svg" alt="" width="32" height="32"><span class="social-label"><strong>Discord</strong><small>JOIN SERVER</small></span></a></div></section>
+      <div class="mail"><a href="https://github.com/jonibak2">Написать вебмастеру</a></div>
+    </aside>
   </div>
-
-  <div id="page-content">
-    <div class="header-top">
-      <a href="https://github.com/jonibak2" class="github-link">Мой GitHub</a>
-    </div>
-    <div class="moon-phase" id="moonPhase"></div>
-    <h1>🧭 Хаб PG78</h1>
-    <div class="links">
-      <!-- Календарь -->
-      <a class="link-card main-btn" href="https://jonibak2.github.io/PG78HUB-REBORN/calendar" style="width: 100%; max-width: 520px; margin: 15px auto; display: block;">
-        <span style="font-size: 1.8rem;">🎂 Календарь дней рождений</span>
-        <div style="font-size: 1.1rem; margin-top: 12px;">Следи за праздниками ПГшеров</div>
-      </a>
-
-      <!-- PG Awards -->
-      <a class="link-card main-btn" href="pages/pgAWARDS/index.html" style="width: 100%; max-width: 520px; margin: -20px auto; display: block; margin-bottom: 30px;">
-        <span style="font-size: 1.8rem;">🏆 PG Awards</span>
-        <div style="font-size: 1.1rem; margin-top: 12px;">Номинации 2023 — 2025</div>
-      </a>
-    </div>
-
-    <footer>
-      © PG78
-      <div class="alpha-test">идите нахуй что это за попки</div>
-    </footer>
-
-    <img src="assets/pgHUB/lo.png" class="video-button" id="videoButton">
-    <div class="video-overlay" id="videoOverlay">
-      <video id="loloVideo" controls>
-        <source src="assets/pgHUB/lolo.mp4" type="video/mp4">
-      </video>
-    </div>
-
-    <!-- Новая надпись -->
-    <div class="ps-dragoman">
-      <a href="https://rule34.xxx/index.php?page=post&s=list&tags=double_penetration+-ai_generated+" target="_blank">P.s для драгомана</a>
-    </div>
-  </div>
-
-  <script src="script.js"></script>
+  <footer><div class="footer-links"><a href="#top">На главную</a> | <a href="calendar.html">Календарь</a> | <a href="pages/pgAWARDS/index.html">PG Awards</a> | <a href="#guestbook">Гостевая</a></div></footer>
+</div>
+<script src="ticker.js"></script>
+<script src="script.js"></script>
+<script src="screenshot-files.js"></script>
+<script src="screenshots.js"></script>
+<script type="module" src="guestbook.js"></script>
 </body>
 </html>
