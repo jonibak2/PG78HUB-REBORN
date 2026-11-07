@@ -13,7 +13,7 @@ const birthdays = [
   { name: 'Ержан', date: '2006-10-19', avatar: 'assets/pgCALENDAR/erzhan.png' },
   { name: 'Драгоман', date: '2008-10-26', avatar: 'assets/pgCALENDAR/dragoman.png' },
   { name: 'Андрей', date: '2002-11-01', avatar: 'assets/pgCALENDAR/andrew.png' },
-  { name: 'Жанибек', date: '2006-11-12', avatar: 'assets/pgCALENDAR/jonibak.png' },
+  { name: 'Жонич', date: '2006-11-12', avatar: 'assets/pgCALENDAR/jonibak.png' },
   { name: 'Настя', date: '2007-12-05', avatar: 'assets/pgCALENDAR/nastya.png' },
 ].map(person => {
   const [born, month, day] = person.date.split('-').map(Number);
